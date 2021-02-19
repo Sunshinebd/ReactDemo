@@ -13,6 +13,21 @@ class Test extends React.Component{
     }
 
     componentDidMount() {
+        
+        const ws = new WebSocket(`wss://115.29.139.81:433/ws/exceptionOrder`);
+       //                            wss://115.29.139.81:433/ws/exceptionOrder
+        ws.onopen = function (ev){
+            console.log("建立连接")
+            ws.send("建立连接")
+        }
+        ws.onmessage = function (event){
+            if (event.data){
+                let lists = Object.keys(event.data).map((item, index) => ({key: item, value:event.data[item]}))
+                setErrorOrders(lists)
+            }
+        }
+        
+        
         let url = 'https://petstore.swagger.io/v2/pet/1'
         axiox({url:url})
             .then((res)=>{
